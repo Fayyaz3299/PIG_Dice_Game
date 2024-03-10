@@ -2,12 +2,27 @@
 #if you get anything other than 1 : Take it and add to the total 
 # You can decide how many times you can roll the dice 
 # If you hit a 1 whatever total resets to 0
+
 import random
-PLAYERCOUNT =2
+
+
+PLAYERCOUNT = 4
+
+
+ARRAYLOCATION_NAME = 0
+ARRAYLOCATION_SCORE = 1
+ARRAYLOCATION_ROLLS = 2
+
 
 def printLineSeperator():
     print("----------------------------------------------------------------------------------")
 
+def printPlayerDetails(player):
+    printLineSeperator()
+    print(f"Player Name : {player[ARRAYLOCATION_NAME]}.\n Player Score : {player[ARRAYLOCATION_SCORE]}. \n Number of rolls by the player : {player[ARRAYLOCATION_ROLLS]}.")
+    printLineSeperator()
+
+    
 def roll ():
     number = random.randint(1,6)
     return number
@@ -26,7 +41,7 @@ def runPlayerGame(player_name):
         roll_counter += 1
         if roll_result == 1:
            score =0
-           print(" You just rolled a 1! Your game is over.")
+           print("You just rolled a 1! Your game is over.")
            printLineSeperator()
            break
         else :
@@ -36,39 +51,46 @@ def runPlayerGame(player_name):
 
     print(f"You finished the game with a score of {score}. You rolled the dice {roll_counter} times.")
     printLineSeperator()
-    return score, roll_counter
-
+    return player_name, score, roll_counter
 
 
 def main():
-    print ("Welcome! This a 2 player game of PIG")
+    print (f"Welcome! This a {PLAYERCOUNT} player game of PIG")
     playerNameList = []
     playerResultList= []
-    #for i in range (1, PLAYERCOUNT):
-    player_one_name = input("Please enter the name of Player 1:")
-    printLineSeperator()
-    player_two_name = input("Please enter the name of Player 2:")
-    printLineSeperator()
-    playerNameList.append(player_one_name)
-    #playerNam
-    playerOneResult=runPlayerGame(player_one_name)
-    playerTwoResult=runPlayerGame(player_two_name)
-    playerOneScore = playerOneResult[0]
-    playerTwoScore = playerTwoResult[0]
-
-    if playerOneScore > playerTwoScore :
-        print(f"{player_one_name} WINS! with a score of {playerOneScore}. They rolled {playerOneResult[1]} times!")
+    highestScore = 0
+    for i in range (0, PLAYERCOUNT):
+        name = input(f"Please enter the name of Player {i+1}: ")
         printLineSeperator()
+        playerNameList.append(name)
+    
+    for i in range (0, PLAYERCOUNT):
+        playerResult = (runPlayerGame(playerNameList[i]))
+        if (playerResult[ARRAYLOCATION_SCORE] > highestScore):
+            highestScore = playerResult[ARRAYLOCATION_SCORE]
+        playerResultList.append(playerResult)
+        
+        
+    winnersList =[]
+    for i in range (0, PLAYERCOUNT):
+        if highestScore == playerResultList[i][ARRAYLOCATION_SCORE]:
+            winnersList.append(playerResultList[i])
 
-    elif playerOneScore < playerTwoScore:
-         print(f"{player_two_name} WINS! with a score of {playerTwoScore}. They rolled {playerTwoResult[1]} times!")
-         printLineSeperator()
+    if len(winnersList) == 1 :
+        printLineSeperator()
+        print(f"{winnersList[0][ARRAYLOCATION_NAME]} WINS!")
+        printPlayerDetails(winnersList[0]) 
+        
     else:
-        print(f"It is a Tie!!!! Both pHalayers scored {playerTwoScore}.\n {player_one_name} rolled {playerOneResult[1]} times. \n {player_two_name} rolled {playerTwoResult[1]} times.")
         printLineSeperator()
+        print(f"It is a TIE! The players scored:")
 
-    print("Thank you for playing! GOOD BYE!!!")
+        for i in range (len(winnersList)):
+            printPlayerDetails(winnersList[i])
+        printLineSeperator()
+       
 
+    print("Thank you for playing! GOOD BYE!")
   
 main()
 
